@@ -11,7 +11,7 @@ def home(request):
 
 class AccountListView(ListView):
     model = Account
-    template_name = 'account_list.html'
+    template_name = 'ksiegowosc/account_list.html'
     context_object_name = 'accounts'
     
     def get_queryset(self):
@@ -20,18 +20,18 @@ class AccountListView(ListView):
 class AccountCreateView(CreateView):
     model = Account
     form_class = AccountForm
-    template_name = 'account_list.html'
+    template_name = 'ksiegowosc/account_list.html'
     success_url = reverse_lazy('account_list')
 
 class AccountUpdateView(UpdateView):
     model = Account
     form_class = AccountForm
-    template_name = 'account_list.html'
+    template_name = 'ksiegowosc/account_list.html'
     success_url = reverse_lazy('account_list')
 
 class AccountDeleteView(DeleteView):
     model = Account
-    template_name = 'account_list.html'
+    template_name = 'ksiegowosc/account_list.html'
     success_url = reverse_lazy('account_list')
 
 
