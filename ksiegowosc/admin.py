@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, wydatki
+from .models import Account
 
 # Register Account with a custom ModelAdmin
 @admin.register(Account)
