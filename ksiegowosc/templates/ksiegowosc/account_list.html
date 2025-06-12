@@ -1,0 +1,17 @@
+<!-- ksiegowosc/templates/ksiegowosc/account_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accounts</title>
+</head>
+<body>
+    <h1>Account List</h1>
+    <ul>
+        {% for account in object_list %}
+            <li>{{ account.name }} — {{ account.account_type }}</li>
+        {% empty %}
+            <li>No accounts found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
