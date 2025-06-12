@@ -1,5 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
 from django.conf import settings
 from django.utils import timezone
 
@@ -21,8 +20,8 @@ class Account(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
 
-    objects = models.Manager() # Default mod which includes the banished
-    active = ActiveMod() # Custom mod which excludes the banished
+    objects = models.Manager()  # default mod includes the banished
+    active = ActiveMod()        # custom mod excludes the banished
 
     def soft_delete(self):
         self.deleted_at = timezone.now()
@@ -30,15 +29,10 @@ class Account(models.Model):
 
     def is_deleted(self):
         return self.deleted_at is not None
-    
+
     def __str__(self):
         return self.name
-    
-=======
 
-# Create your models here.
 
-class wydatki(models.Model):
-    title = models.CharField(max_length=200)
-    amount = models.IntegerField()
->>>>>>> 8702e905c9eb88b49bca0485c8db1f00fd1d7221
+    def __str__(self):
+        return f"{self.title} ({self.amount})"
