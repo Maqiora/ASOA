@@ -8,7 +8,6 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", views.home, name="home"),
     path('', AccountListView.as_view(), name='account_list'),
     path('create/', AccountCreateView.as_view(), name='account_create'),
     path('<int:pk>/edit/', AccountUpdateView.as_view(), name='account_edit'),
