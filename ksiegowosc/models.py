@@ -1,4 +1,5 @@
 from django.db import models
+<<<<<<< HEAD
 from django.conf import settings
 from django.utils import timezone
 
@@ -33,3 +34,11 @@ class Account(models.Model):
     def __str__(self):
         return self.name
     
+=======
+
+# Create your models here.
+
+class wydatki(models.Model):
+    title = models.CharField(max_length=200)
+    amount = models.IntegerField()
+>>>>>>> 8702e905c9eb88b49bca0485c8db1f00fd1d7221
