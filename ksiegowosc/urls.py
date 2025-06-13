@@ -4,11 +4,11 @@ from .views import (
     AccountCreateView,
     AccountUpdateView,
     AccountDeleteView,
-    Account_list_and_create
+    AccountListCreateView
 )
 
 urlpatterns = [
-    path('accounts/', Account_list_and_create.as_view, name='account_add'),
+    path('', AccountListCreateView.as_view(), name='account_list'),
     path('create/', AccountCreateView.as_view(), name='account_create'),
     path('<int:pk>/edit/', AccountUpdateView.as_view(), name='account_edit'),
     path('<int:pk>/delete/', AccountDeleteView.as_view(), name='account_delete'),
