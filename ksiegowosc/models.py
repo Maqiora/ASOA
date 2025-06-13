@@ -33,3 +33,30 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
+# class Transaction(models.Mode):
+#     date = models.DateTimeField(auto_now_add=True)
+#     debit_bucket = models.IntegerField()
+#     credit_bucket = models.IntegerField()
+#     description = models.CharField(max_length=250)
+#     net_amount = models.IntegerField()
+#     tax_amount = models.IntegerField()
+#     gross_amount = models.IntegerField()
+#     currency = models.Choices()
+
+
+
+# Johny's Issue's
+# Allow entering transactions.
+# A transaction has:
+# a date
+# debit account
+# credit account
+# description
+# net amount
+# tax amount
+# gross amount
+# currency
+# For debugging, we can additionally record:
+# the creation date and time,
+# the user who created the transaction,
+# the date and time when the transaction was (soft) deleted

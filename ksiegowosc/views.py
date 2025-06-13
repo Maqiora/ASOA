@@ -13,6 +13,9 @@ class AccountListCreateView(View, MultipleObjectMixin):
     template_name = 'ksiegowosc/account_list.html'
     context_object_name = 'accounts'
 
+    def get_queryset(self):
+        return Account.active.all()
+
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         form = self.form_class()
@@ -45,4 +48,7 @@ class AccountDeleteView(DeleteView):
     template_name = 'ksiegowosc/account_list.html'
     success_url = reverse_lazy('account_list')
 
-
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.soft_delete()  # Call your model's soft delete
+        return redirect(self.success_url)
