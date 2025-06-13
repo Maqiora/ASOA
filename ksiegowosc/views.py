@@ -15,16 +15,7 @@ def Account_list_and_create(request):
         
 def home(request):
     return render(request, 'home.html')
-
-
-class AccountListView(ListView):
-    model = Account
-    template_name = 'ksiegowosc/account_list.html'
-    context_object_name = 'accounts'
-    
-    def get_queryset(self):
-        return Account.active.all()
-    
+ 
 class AccountCreateView(CreateView):
     model = Account
     form_class = AccountForm

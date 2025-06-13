@@ -5,15 +5,6 @@
     <title>Accounts</title>
 </head>
 <body>
-    <h1>Account List</h1>
-    <ul>
-        {% for account in accounts %}
-            <li>{{ account.name }} — {{ account.account_type }}</li>
-        {% empty %}
-            <li>No accounts found.</li>
-        {% endfor %}
-    </ul>
-    <h1>Account Create</h1>
 
 <!-- Add Account Form -->
     <h2>Add New Account</h2>
