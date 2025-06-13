@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -6,8 +6,16 @@ from django.urls import reverse_lazy
 from .models import Account
 from .forms import AccountForm
 
+def Account_list_and_create(request):
+    if request.method == 'POST':
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('account_list')
+        
 def home(request):
     return render(request, 'home.html')
+
 
 class AccountListView(ListView):
     model = Account
