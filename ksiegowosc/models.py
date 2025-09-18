@@ -8,6 +8,7 @@ class ActiveMod(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)
 
+
 class Account(models.Model):
     ACCOUNT_TYPES = (
         ('internal', 'Internal'),
@@ -33,30 +34,66 @@ class Account(models.Model):
     def __str__(self):
         return self.name
 
-# class Transaction(models.Mode):
-#     date = models.DateTimeField(auto_now_add=True)
-#     debit_bucket = models.IntegerField()
-#     credit_bucket = models.IntegerField()
-#     description = models.CharField(max_length=250)
-#     net_amount = models.IntegerField()
-#     tax_amount = models.IntegerField()
-#     gross_amount = models.IntegerField()
-#     currency = models.Choices()
 
+class TransactionManager(models.Manager):
+    """Manager that excludes soft-deleted transactions."""
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at__isnull=True)
 
+class Transaction(models.Model):
+    """Represents a financial transaction."""
 
-# Johny's Issue's
-# Allow entering transactions.
-# A transaction has:
-# a date
-# debit account
-# credit account
-# description
-# net amount
-# tax amount
-# gross amount
-# currency
-# For debugging, we can additionally record:
-# the creation date and time,
-# the user who created the transaction,
-# the date and time when the transaction was (soft) deleted
+    date = models.DateField()
+    debit_account = models.ForeignKey(
+        Account,
+        on_delete=models.PROTECT,
+        related_name="debit_transactions"
+    )
+    credit_account = models.ForeignKey(
+        Account,
+        on_delete=models.PROTECT,
+        related_name="credit_transactions"
+    )
+    description = models.TextField(blank=True)
+
+    net_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    gross_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    currency = models.CharField(max_length=3)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_transactions"
+    )
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    deleted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="deleted_transactions"
+    )
+
+    # Managers
+    objects = models.Manager()      # includes deleted
+    active = TransactionManager()   # excludes deleted
+
+    class Meta:
+        ordering = ["-date", "-created_at"]
+
+    def soft_delete(self, user=None):
+        """Soft delete instead of actual deletion."""
+        self.deleted_at = timezone.now()
+        if user:
+            self.deleted_by = user
+        self.save(update_fields=["deleted_at", "deleted_by"])
+
+    def is_deleted(self):
+        return self.deleted_at is not None
+
+    def __str__(self):
+        return f"{self.date} | {self.debit_account} -> {self.credit_account} | {self.gross_amount} {self.currency}"
