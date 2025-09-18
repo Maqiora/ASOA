@@ -40,6 +40,7 @@ class TransactionManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)
 
+
 class Transaction(models.Model):
     """Represents a financial transaction."""
 
