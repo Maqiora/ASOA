@@ -69,3 +69,22 @@ class AccountDeleteView(DeleteView):
         self.object = self.get_object()
         self.object.soft_delete()
         return redirect(self.success_url)
+
+class ExpenseView(TemplateView):
+    template_name = "ksiegowosc/expenses.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["expenses"] = Transaction.active.all()
+        context["form"] = TransactionForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            form.save(user=request.user)
+            return redirect("expenses")
+        context = self.get_context_data()
+        context["form"] = form
+        return self.render_to_response(context)
+        

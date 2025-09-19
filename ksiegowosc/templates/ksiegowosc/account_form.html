@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    {% if object %}
+        <h2 class="text-xl font-semibold mb-4">Update Account: {{ object.name }}</h2>
+    {% else %}
+        <h2 class="text-xl font-semibold mb-4">Create New Account</h2>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="mt-4 flex justify-between">
+            <a href="{% url 'dashboard' %}" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</a>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                {% if object %}Update{% else %}Create{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
