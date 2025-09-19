@@ -1,54 +1,45 @@
-from django.views import View
-from django.shortcuts import render, redirect
-from django.views.generic.list import MultipleObjectMixin
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.shortcuts import redirect
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-from .models import Account
+from .models import Account, Transaction
 from .forms import AccountForm
 
-class AccountListCreateView(View, MultipleObjectMixin):
-    model = Account
-    form_class = AccountForm
-    template_name = 'ksiegowosc/account_list.html'
-    context_object_name = 'accounts'
 
-    def get_queryset(self):
-        return Account.active.all()
+class DashboardView(TemplateView):
+    template_name = "ksiegowosc/dashboard.html"
 
-    def get(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        form = self.form_class()
-        context = self.get_context_data(form=form)
-        return render(request, self.template_name, context)
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["accounts"] = Account.active.all()
+        context["transactions"] = Transaction.active.all()
+        context["form"] = AccountForm()
+        return context
+
     def post(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        form = self.form_class(request.POST)
+        """Handle Account form submission directly on the dashboard."""
+        form = AccountForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('account_list')
-        context = self.get_context_data(form=form)
-        return render(request, self.template_name, context)
- 
-class AccountCreateView(CreateView):
-    model = Account
-    form_class = AccountForm
-    template_name = 'ksiegowosc/account_list.html'
-    success_url = reverse_lazy('account_list')
+            return redirect("dashboard")
+        context = self.get_context_data()
+        context["form"] = form
+        return self.render_to_response(context)
+
 
 class AccountUpdateView(UpdateView):
     model = Account
     form_class = AccountForm
-    template_name = 'ksiegowosc/account_list.html'
-    success_url = reverse_lazy('account_list')
+    template_name = "ksiegowosc/account_form.html"
+    success_url = reverse_lazy("dashboard")
+
 
 class AccountDeleteView(DeleteView):
     model = Account
-    template_name = 'ksiegowosc/account_list.html'
-    success_url = reverse_lazy('account_list')
+    template_name = "ksiegowosc/account_confirm_delete.html"
+    success_url = reverse_lazy("dashboard")
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.soft_delete()  # Call your model's soft delete
+        self.object.soft_delete()
         return redirect(self.success_url)
