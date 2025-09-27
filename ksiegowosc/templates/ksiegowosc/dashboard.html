@@ -1,10 +1,11 @@
 <h1>Dashboard</h1>
 
 <h2>Accounts</h2>
+
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Account</button>
+    {{ account_form.as_p }}
+    <button type="submit" name="account_submit">Add Account</button>
 </form>
 
 <ul>
@@ -20,6 +21,13 @@
 </ul>
 
 <h2>Transactions</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ transaction_form.as_p }}
+    <button type="submit" name="transaction_submit">Add Transaction</button>
+</form>
+
 <table border="1">
     <tr>
         <th>Date</th>
