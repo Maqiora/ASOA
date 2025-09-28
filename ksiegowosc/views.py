@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 
 from .models import Account, Transaction
 from .forms import AccountForm, TransactionForm
-
+ 
 
 class DashboardView(TemplateView):
     template_name = "ksiegowosc/dashboard.html"
@@ -21,7 +21,7 @@ class DashboardView(TemplateView):
         if "account_submit" in request.POST:
             form = AccountForm(request.POST)
             if form.is_valid():
-                form.save()
+                form.save(user=request.user)   
                 return redirect("dashboard")
             context = self.get_context_data()
             context["account_form"] = form
@@ -30,12 +30,11 @@ class DashboardView(TemplateView):
         elif "transaction_submit" in request.POST:
             form = TransactionForm(request.POST)
             if form.is_valid():
-                form.save(user=request.user)
+                form.save()   # ✅ no user kwarg
                 return redirect("dashboard")
             context = self.get_context_data()
             context["transaction_form"] = form
             return self.render_to_response(context)
-
 
 class AccountUpdateView(UpdateView):
     model = Account
